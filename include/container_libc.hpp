@@ -6,42 +6,44 @@
 #include <utility>
 #include <iostream>
 
-class container
+namespace cppcourse {
+
+class container_libc
 {
 
 public:
 
-    explicit container()
+    explicit container_libc()
     {
-        buffer = new int[c_base_size];
+        buffer = (int*)malloc(c_base_size * sizeof(int));
     };
 
-    container(int* buf)
+    container_libc(int* buf)
         : buffer(buf)
     {};
 
-    container(const container& other)
-        : container(other.buffer)
+    container_libc(const container_libc& other)
+        : container_libc(other.buffer)
     {};
 
-    container(container&& other) noexcept
+    container_libc(container_libc&& other) noexcept
         : buffer(std::exchange(other.buffer, nullptr))
     {};
 
-    container& operator=(const container& other)
+    container_libc& operator=(const container_libc& other)
     {
         if (this == &other)
             return *this;
 
-        container temp(other);
+        container_libc temp(other);
         std::swap(buffer, temp.buffer);
 
         return *this;
     };
 
-    container& operator=(container&& other)
+    container_libc& operator=(container_libc&& other)
     {
-        container temp(std::move(other));
+        container_libc temp(std::move(other));
         std::swap(buffer, temp.buffer);
         return *this;
     };
@@ -51,9 +53,9 @@ public:
         return buffer[index];
     };
 
-    ~container()
+    ~container_libc()
     {
-        delete[] buffer;
+        free(buffer);
     };
 
     void push_back(int element)
@@ -109,7 +111,7 @@ private:
         std::cout << __PRETTY_FUNCTION__ << "new_size = " << new_size << std::endl;
         void* new_buffer = realloc(buffer, new_size * sizeof(int));
         if (new_buffer != nullptr) {
-            buffer = static_cast<int*>(new_buffer);
+            buffer = (int*)new_buffer;
             capacity = new_size;
         }
     }
@@ -121,3 +123,5 @@ private:
     std::size_t capacity = c_base_size;
 
 };
+
+} // cppcourse

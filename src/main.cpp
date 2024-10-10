@@ -6,6 +6,7 @@
 #include <vector>
 #include <unordered_map>
 #include "container.hpp"
+#include "container_libc.hpp"
 
 int g_integer = 150;
 
@@ -54,10 +55,9 @@ int& funtrion_ref()
     return g_integer;
 }
 
-int main()
+void test_container()
 {
-
-    container cont{};
+    cppcourse::container cont{};
     cont.push_back(20);
     cont.assign(5, 21);
     cont.assign(2, 59);
@@ -76,6 +76,37 @@ int main()
     for (int i = 0; i < cont.size(); ++i) {
         std::cout << "element[" << i << "] = " << cont.at(i) << std::endl;
     }
+}
+
+void test_container_libc()
+{
+    cppcourse::container_libc cont{};
+    cont.push_back(20);
+    cont.assign(5, 21);
+    cont.assign(2, 59);
+
+    const auto& res = cont[0];
+    cont[0] = 50;
+
+    std::cout << "res = " << res << std::endl;
+
+    for (int i = 0; i < 72; ++i) {
+        cont.push_back(i);
+        std::cout << "element[" << i << "] = " << cont.at(i) << std::endl;
+    }
+    std::cout << "=============================" << std::endl;
+    cont.erase(5);
+    for (int i = 0; i < cont.size(); ++i) {
+        std::cout << "element[" << i << "] = " << cont.at(i) << std::endl;
+    }
+}
+
+int main()
+{
+    // test_container();
+
+    test_container_libc();
+
 
     // add -> push_back
     // size -> size
@@ -103,3 +134,8 @@ int main()
 // do realloc with actual realloc
 // Add unit tests
 // publish code to some repo
+
+
+// 2 containers - one on malloc realloc free
+// 2 containers - second with new delete and move
+// container with template and structure
