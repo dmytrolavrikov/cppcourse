@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(cppcourse_test)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
@@ -17,7 +17,7 @@ enable_testing()
 
 add_executable(
     container_test
-  container_test.cpp
+    container_test.cpp
 )
 target_link_libraries(
     container_test
