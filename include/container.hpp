@@ -1,29 +1,27 @@
 /** Copyright 2024 Dmytro Lavrikov
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdlib>
-#include <iterator>
 #include <memory>
 #include <new>
 #include <type_traits>
 #include <utility>
-#include <iostream>
-#include <algorithm>
 
 namespace cppcourse {
 
@@ -79,10 +77,10 @@ public:
         free(buffer);
     }
 private:
-    std::size_t allocation_count;
+  std::size_t allocation_count;
 };
 
-template <typename Allocator>
+template <typename Allocator = allocator_with_new>
 class container
 {
 
@@ -95,20 +93,22 @@ public:
   container(int *buf) : buffer(buf){};
 
   container(const container &other)
-      : container(copy(other.buffer, other.capacity)){};
+      : current_size(other.current_size),
+        buffer(copy(other.buffer, other.capacity)) {}
 
   container(container &&other) noexcept
       : buffer(std::exchange(other.buffer, nullptr)){};
 
   container &operator=(const container &other) {
-    if (this == &other)
-      return *this;
-
-    container temp(other);
-    std::swap(buffer, temp.buffer);
-
+    if (this != &other) {
+      if (current_size != other.current_size) {
+        buffer = allocator.allocate(other.capacity);
+        current_size = other.current_size;
+      }
+      std::copy(&other.buffer[0], &other.buffer[0] + current_size, &buffer[0]);
+    }
     return *this;
-    };
+  };
 
     container& operator=(container&& other)
     {
@@ -135,7 +135,6 @@ public:
 
         buffer[current_size] = element;
         current_size++;
-
     };
 
     int at(std::size_t index)
@@ -187,7 +186,7 @@ private:
 
     int* copy(int* src, int size)
     {
-        int* new_buf = new int(size);
+        int* new_buf = allocator.allocate(size);
         for (std::size_t i = 0; i < size; ++i) {
             new_buf[i] = src[i];
         }
@@ -198,6 +197,5 @@ private:
     std::size_t current_size = 0;
     std::size_t capacity = c_base_size;
     Allocator allocator;
-
 };
-} // cppcourse
+} // namespace cppcourse

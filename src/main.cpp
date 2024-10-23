@@ -108,7 +108,7 @@ int main()
 
     test_container_libc();
 
-    std::vector<int, std::allocator<int>> vec;
+
 
 
     // add -> push_back

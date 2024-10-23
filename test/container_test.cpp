@@ -2,12 +2,12 @@
 #include "container.hpp"
 
 TEST(cppcourse, create) {
-  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cppcourse::container cont;
   EXPECT_TRUE(cont.empty());
 }
 
 TEST(cppcourse, add_single) {
-  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cppcourse::container cont;
   cont.push_back(1);
   EXPECT_EQ(cont.at(0), 1);
   EXPECT_EQ(cont.size(), 1);
@@ -16,7 +16,7 @@ TEST(cppcourse, add_single) {
 
 TEST(cppcourse, add_multiple)
 {
-  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cppcourse::container cont;
   cont.push_back(1);
   cont.push_back(2);
   cont.push_back(3);
@@ -33,10 +33,46 @@ TEST(cppcourse, add_multiple)
 
 TEST(cppcourse, remove_one)
 {
-  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cppcourse::container cont;
   cont.push_back(1);
   EXPECT_EQ(cont.at(0), 1);
 
   cont.erase(0);
   EXPECT_TRUE(cont.empty());
+}
+
+TEST(cppcourse, assign)
+{
+  cppcourse::container cont;
+  cont.push_back(1);
+  EXPECT_EQ(cont.at(0), 1);
+  cont.assign(0, 5);
+  EXPECT_EQ(cont.at(0), 5);
+}
+
+TEST(cppcourse, copy_construct)
+{
+  cppcourse::container cont;
+  cont.push_back(1);
+  EXPECT_EQ(cont.at(0), 1);
+
+  cppcourse::container cont_copy{cont};
+  EXPECT_EQ(cont_copy.at(0), 1);
+}
+
+TEST(cppcourse, copy_assign)
+{
+  cppcourse::container cont;
+  cont.push_back(1);
+  EXPECT_EQ(cont.at(0), 1);
+
+  cppcourse::container cont_copy;
+  cont_copy = cont;
+  EXPECT_EQ(cont_copy.at(0), 1);
+}
+
+
+TEST(cppcourse, move)
+{
+
 }
