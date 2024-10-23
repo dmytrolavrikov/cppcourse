@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <memory>
 #include <set>
 #include <string>
 #include <tuple>
@@ -57,7 +58,7 @@ int& funtrion_ref()
 
 void test_container()
 {
-    cppcourse::container cont{};
+    cppcourse::container<cppcourse::allocator_with_new> cont{};
     cont.push_back(20);
     cont.assign(5, 21);
     cont.assign(2, 59);
@@ -106,6 +107,8 @@ int main()
     // test_container();
 
     test_container_libc();
+
+    std::vector<int, std::allocator<int>> vec;
 
 
     // add -> push_back

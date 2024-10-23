@@ -1,9 +1,42 @@
 #include <gtest/gtest.h>
+#include "container.hpp"
 
-// Demonstrate some basic assertions.
-TEST(cppcourse, test_add) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 42);
+TEST(cppcourse, create) {
+  cppcourse::container<cppcourse::allocator_with_new> cont;
+  EXPECT_TRUE(cont.empty());
+}
+
+TEST(cppcourse, add_single) {
+  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cont.push_back(1);
+  EXPECT_EQ(cont.at(0), 1);
+  EXPECT_EQ(cont.size(), 1);
+  EXPECT_FALSE(cont.empty());
+}
+
+TEST(cppcourse, add_multiple)
+{
+  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cont.push_back(1);
+  cont.push_back(2);
+  cont.push_back(3);
+  cont.push_back(4);
+  cont.push_back(5);
+  EXPECT_EQ(cont.at(0), 1);
+  EXPECT_EQ(cont.at(1), 2);
+  EXPECT_EQ(cont.at(2), 3);
+  EXPECT_EQ(cont.at(3), 4);
+  EXPECT_EQ(cont.at(4), 5);
+  EXPECT_EQ(cont.size(), 5);
+  EXPECT_FALSE(cont.empty());
+}
+
+TEST(cppcourse, remove_one)
+{
+  cppcourse::container<cppcourse::allocator_with_new> cont;
+  cont.push_back(1);
+  EXPECT_EQ(cont.at(0), 1);
+
+  cont.erase(0);
+  EXPECT_TRUE(cont.empty());
 }
