@@ -22,63 +22,9 @@
 #include <new>
 #include <type_traits>
 #include <utility>
+#include "allocator.hpp"
 
 namespace cppcourse {
-
-static constexpr std::size_t c_base_size = 16;
-
-class allocator_with_new {
-public:
-    int* allocate(std::size_t size = c_base_size)
-    {
-        int* buffer = new int[size];
-        return buffer;
-    }
-
-    void deallocate(int* buffer)
-    {
-        delete [] buffer;
-    }
-
-    void reallocate(int* buffer, std::size_t new_capacity, std::size_t current_size)
-    {
-
-        int* new_buf = allocate(new_capacity);
-        for (std::size_t i = 0; i < current_size; ++i) {
-            new_buf[i] = buffer[i];
-        }
-
-        deallocate(buffer);
-        buffer = new_buf;
-    }
-
-private:
-    std::size_t allocation_count;
-};
-
-class allocator_with_malloc {
-public:
-    int* allocate(std::size_t size = c_base_size)
-    {
-        int* buffer = (int*)malloc(size * sizeof(int));
-        return buffer;
-    }
-
-    void reallocate(int* buffer, std::size_t new_capacity, std::size_t current_size)
-    {
-        void* new_buffer = realloc(buffer, new_capacity * sizeof(int));
-        if (new_buffer != nullptr) {
-            buffer = static_cast<int*>(new_buffer);
-        }
-    }
-
-    void deallocate(int* buffer)
-    {
-        free(buffer);
-    }
-private:
-  std::size_t allocation_count;
-};
 
 template <typename Allocator = allocator_with_new>
 class container
@@ -87,25 +33,22 @@ class container
 public:
   explicit container() : buffer(allocator.allocate()){};
 
-  container(size_t initial_size)
-      : current_size(initial_size), buffer(allocator.allocate(initial_size)) {}
+  container(size_t initial_capacity)
+      : capacity(initial_capacity), buffer(allocator.allocate(initial_capacity)) {}
 
   container(int *buf) : buffer(buf){};
 
   container(const container &other)
       : current_size(other.current_size),
-        buffer(copy(other.buffer, other.capacity)) {}
+        buffer(copy(other.buffer, other.current_size)) {}
 
   container(container &&other) noexcept
       : buffer(std::exchange(other.buffer, nullptr)){};
 
   container &operator=(const container &other) {
     if (this != &other) {
-      if (current_size != other.current_size) {
-        buffer = allocator.allocate(other.capacity);
-        current_size = other.current_size;
-      }
-      std::copy(&other.buffer[0], &other.buffer[0] + current_size, &buffer[0]);
+        // check for leak
+        buffer = copy(other, current_size);
     }
     return *this;
   };
@@ -147,7 +90,7 @@ public:
 
     void assign(std::size_t index, int element)
     {
-        if (index + 1 > current_size) {
+        if (index >= current_size) {
             return;
         }
         buffer[index] = element;
@@ -158,7 +101,7 @@ public:
 
     void erase(std::size_t index)
     {
-        if (index + 1 > current_size) {
+        if (index >= current_size) {
             return;
         }
 
@@ -179,7 +122,6 @@ public:
 private:
     void realloc_(std::size_t new_capacity)
     {
-        std::cout << __PRETTY_FUNCTION__ << "new_capacity = " << new_capacity << std::endl;
         allocator.reallocate(buffer, new_capacity, current_size);
         capacity = new_capacity;
     }
