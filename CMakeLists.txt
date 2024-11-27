@@ -2,12 +2,13 @@ cmake_minimum_required(VERSION 3.10)
 
 project(cppcourse)
 
-include_directories(${PROJECT_NAME}
-  include
-)
-
 add_executable(${PROJECT_NAME}
     src/main.cpp
+)
+
+include_directories(${PROJECT_NAME}
+  PUBLIC
+  include
 )
 
 target_link_libraries(${PROJECT_NAME}

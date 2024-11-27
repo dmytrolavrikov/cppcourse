@@ -65,6 +65,11 @@ public:
         return buffer[index];
     };
 
+    const int& operator[](std::size_t index) const
+    {
+        return buffer[index];
+    };
+
     ~container()
     {
         allocator.deallocate(buffer);
@@ -80,7 +85,7 @@ public:
         current_size++;
     };
 
-    int at(std::size_t index)
+    int at(std::size_t index) const
     {
         if (index + 1 > current_size) {
             return -1;
@@ -109,12 +114,12 @@ public:
         buffer[index] = 0;
     };
 
-    std::size_t size()
+    std::size_t size() const
     {
         return current_size;
     };
 
-    bool empty()
+    bool empty() const
     {
         return current_size == 0;
     };

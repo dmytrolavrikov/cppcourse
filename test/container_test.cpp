@@ -58,7 +58,7 @@ TEST(cppcourse, copy_construct)
 
   cppcourse::container cont_copy{cont};
   EXPECT_EQ(cont_copy.at(0), 1);
-  EXPECT_EQ(cont_copy.current_size, cont.current_size);
+  EXPECT_EQ(cont_copy.size(), cont.ize());
 }
 
 TEST(cppcourse, copy_assign)
