@@ -48,7 +48,8 @@ public:
   container &operator=(const container &other) {
     if (this != &other) {
         // check for leak
-        buffer = copy(other, current_size);
+        current_size = other.current_size;
+        buffer = copy(other.buffer, other.current_size);
     }
     return *this;
   };
@@ -131,7 +132,7 @@ private:
         capacity = new_capacity;
     }
 
-    int* copy(int* src, int size)
+    int* copy(int* src, std::size_t size)
     {
         int* new_buf = allocator.allocate(size);
         for (std::size_t i = 0; i < size; ++i) {

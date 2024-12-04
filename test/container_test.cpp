@@ -58,7 +58,7 @@ TEST(cppcourse, copy_construct)
 
   cppcourse::container cont_copy{cont};
   EXPECT_EQ(cont_copy.at(0), 1);
-  EXPECT_EQ(cont_copy.size(), cont.ize());
+  EXPECT_EQ(cont_copy.size(), cont.size());
 }
 
 TEST(cppcourse, copy_assign)
@@ -70,7 +70,7 @@ TEST(cppcourse, copy_assign)
   cppcourse::container cont_copy;
   cont_copy = cont;
   EXPECT_EQ(cont_copy.at(0), 1);
-  EXPECT_EQ(cont_copy.current_size, cont.current_size);
+  EXPECT_EQ(cont_copy.size(), cont.size());
 }
 
 TEST(cppcourse, copy_with_shrink)
@@ -86,7 +86,7 @@ TEST(cppcourse, copy_with_shrink)
 
   cont = cont_copy;
   EXPECT_EQ(cont.at(0), 1);
-  EXPECT_EQ(cont.current_size, 1);
+  EXPECT_EQ(cont.size(), 1);
 }
 
 

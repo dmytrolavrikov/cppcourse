@@ -1,10 +1,8 @@
 #pragma once
 
+#include <utility>
+#include <memory>
 namespace cppcourse {
-
-// TODO deleter
-// TODO variadic template for multiple args
-// paths to includes fix
 
 template <typename T>
 class unique_ptr
@@ -56,16 +54,24 @@ private:
 
 };
 
-template <typename T>
-unique_ptr<T> make_unique() {
-    T* data = new T();
-    return unique_ptr<T>(data);
+// template <typename T>
+// unique_ptr<T> make_unique() {
+//     T* data = new T();
+//     return unique_ptr<T>(data);
+// };
+
+// template <typename T, typename ARG>
+// unique_ptr<T> make_unique(ARG arg) {
+//     T* data = new T(arg);
+//     return unique_ptr<T>(data);
+// };
+
+template <typename T, typename... Args>
+unique_ptr<T> make_unique(Args&&... arg) {
+    auto ptr = new T(std::forward<Args>(arg)...);
+    return unique_ptr<T>(ptr);
 };
 
-template <typename T, typename ARG>
-unique_ptr<T> make_unique(ARG arg) {
-    T* data = new T(arg);
-    return unique_ptr<T>(data);
-};
+// TODO deleter
 
 } // namespace cppcourse

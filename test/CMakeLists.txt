@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-project(cppcourse_test)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -16,13 +10,18 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(
-    container_test
+    cppcource_test
     container_test.cpp
+    unique_ptr_test.cpp
 )
 target_link_libraries(
-    container_test
+    cppcource_test
     GTest::gtest_main
+)
+target_include_directories(cppcource_test
+    PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
 )
 
 include(GoogleTest)
-gtest_discover_tests(container_test)
+gtest_discover_tests(cppcource_test)
