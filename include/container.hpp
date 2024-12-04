@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "allocator.hpp"
 #include <algorithm>
 #include <cstddef>
 #include <cstdlib>
@@ -22,37 +23,43 @@
 #include <new>
 #include <type_traits>
 #include <utility>
-#include "allocator.hpp"
 
 namespace cppcourse {
 
 template <typename Allocator = allocator_with_new>
-class container
-{
+class container {
 
 public:
-  explicit container() : buffer(allocator.allocate()){};
+    explicit container()
+        : buffer(allocator.allocate()) {};
 
-  container(size_t initial_capacity)
-      : capacity(initial_capacity), buffer(allocator.allocate(initial_capacity)) {}
-
-  container(int *buf) : buffer(buf){};
-
-  container(const container &other)
-      : current_size(other.current_size),
-        buffer(copy(other.buffer, other.current_size)) {}
-
-  container(container &&other) noexcept
-      : buffer(std::exchange(other.buffer, nullptr)){};
-
-  container &operator=(const container &other) {
-    if (this != &other) {
-        // check for leak
-        current_size = other.current_size;
-        buffer = copy(other.buffer, other.current_size);
+    container(size_t initial_capacity)
+        : capacity(initial_capacity)
+        , buffer(allocator.allocate(initial_capacity))
+    {
     }
-    return *this;
-  };
+
+    container(int* buf)
+        : buffer(buf) {};
+
+    container(const container& other)
+        : current_size(other.current_size)
+        , buffer(copy(other.buffer, other.current_size))
+    {
+    }
+
+    container(container&& other) noexcept
+        : buffer(std::exchange(other.buffer, nullptr)) {};
+
+    container& operator=(const container& other)
+    {
+        if (this != &other) {
+            // check for leak
+            current_size = other.current_size;
+            buffer = copy(other.buffer, other.current_size);
+        }
+        return *this;
+    };
 
     container& operator=(container&& other)
     {
@@ -61,20 +68,11 @@ public:
         return *this;
     };
 
-    int& operator[](std::size_t index)
-    {
-        return buffer[index];
-    };
+    int& operator[](std::size_t index) { return buffer[index]; };
 
-    const int& operator[](std::size_t index) const
-    {
-        return buffer[index];
-    };
+    const int& operator[](std::size_t index) const { return buffer[index]; };
 
-    ~container()
-    {
-        allocator.deallocate(buffer);
-    };
+    ~container() { allocator.deallocate(buffer); };
 
     void push_back(int element)
     {
@@ -115,15 +113,9 @@ public:
         buffer[index] = 0;
     };
 
-    std::size_t size() const
-    {
-        return current_size;
-    };
+    std::size_t size() const { return current_size; };
 
-    bool empty() const
-    {
-        return current_size == 0;
-    };
+    bool empty() const { return current_size == 0; };
 
 private:
     void realloc_(std::size_t new_capacity)

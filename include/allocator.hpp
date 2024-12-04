@@ -30,12 +30,10 @@ public:
         return buffer;
     }
 
-    void deallocate(int* buffer)
-    {
-        delete [] buffer;
-    }
+    void deallocate(int* buffer) { delete[] buffer; }
 
-    void reallocate(int* buffer, std::size_t new_capacity, std::size_t current_size)
+    void reallocate(int* buffer, std::size_t new_capacity,
+        std::size_t current_size)
     {
 
         int* new_buf = allocate(new_capacity);
@@ -46,7 +44,6 @@ public:
         deallocate(buffer);
         buffer = new_buf;
     }
-
 };
 
 class allocator_with_malloc {
@@ -57,7 +54,8 @@ public:
         return buffer;
     }
 
-    void reallocate(int* buffer, std::size_t new_capacity, std::size_t current_size)
+    void reallocate(int* buffer, std::size_t new_capacity,
+        std::size_t current_size)
     {
         void* new_buffer = realloc(buffer, new_capacity * sizeof(int));
         if (new_buffer != nullptr) {
@@ -67,9 +65,5 @@ public:
         }
     }
 
-    void deallocate(int* buffer)
-    {
-        free(buffer);
-    }
-
+    void deallocate(int* buffer) { free(buffer); }
 };
