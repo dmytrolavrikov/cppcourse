@@ -2,20 +2,20 @@ cmake_minimum_required(VERSION 3.10)
 
 project(cppcourse)
 
-find_library(GTest
-             NAMES GTest
-             HINTS "${CMAKE_CURRENT_LIST_DIR}/thirdparty/gtest")
-
-include_directories(${PROJECT_NAME}
-  include
-)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
 )
 
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+)
+
 target_link_libraries(${PROJECT_NAME}
-  PRIVATE
+  PUBLIC
 )
 
 add_subdirectory(test)

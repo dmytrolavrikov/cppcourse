@@ -7,9 +7,7 @@
 
 int g_integer = 150;
 
-
-struct S
-{
+struct S {
     int n;
     std::string s;
     float d;
@@ -34,7 +32,6 @@ template <typename T>
 struct SomethingRef {
     T& first;
     T& second;
-
 };
 
 struct SomethingPtr {
@@ -42,15 +39,9 @@ struct SomethingPtr {
     int* second;
 };
 
-int* function()
-{
-    return &g_integer;
-}
+int* function() { return &g_integer; }
 
-int& funtrion_ref()
-{
-    return g_integer;
-}
+int& funtrion_ref() { return g_integer; }
 
 int func()
 {
@@ -64,10 +55,6 @@ int func()
 
     std::cout << "g_integer = " << g_integer << std::endl;
 
-
-
-
-
     Something some;
     some.first = 6;
     some.second = 7;
@@ -76,16 +63,15 @@ int func()
 
     some2 = some;
 
-    SomethingRef<int> sref{some.first, some.second};
+    SomethingRef<int> sref { some.first, some.second };
     sref.first = 19;
-    std::cout << some2.first  << ", " << some2.second << std::endl;
-    std::cout << some.first  << ", " << some.second << std::endl;
+    std::cout << some2.first << ", " << some2.second << std::endl;
+    std::cout << some.first << ", " << some.second << std::endl;
 
     int sss = 1488;
     int sss2 = 8814;
 
-    SomethingPtr s_ptr{&some.first, &some.second};
-
+    SomethingPtr s_ptr { &some.first, &some.second };
 
     std::cout << "s_ptr.first = " << s_ptr.first << std::endl;
     std::cout << "*s_ptr.first = " << *s_ptr.first << std::endl;
@@ -98,14 +84,13 @@ int func()
     // Lexicographical comparison demo:
     std::set<S> set_of_s;
 
-    S value{42, "Test", 3.14};
+    S value { 42, "Test", 3.14 };
     std::set<S>::iterator iter;
     bool is_inserted;
 
     // Unpack a pair:
     std::tie(iter, is_inserted) = set_of_s.insert(value);
     assert(is_inserted);
-
 
     // std::tie and structured bindings:
     auto position = [](int w) { return std::tuple(1 * w, 2 * w); };
@@ -126,7 +111,6 @@ int func()
 
     std::cout << "x = " << x << ", y = " << y << std::endl;
 
-
     // Implicit conversions are permitted:
     std::tuple<char, short> coordinates(6, 9);
     std::tie(x, y) = coordinates;
@@ -135,6 +119,6 @@ int func()
 
 // SomethingRef -> SomethingPtr
 // auto [it, inserted] = map.emplace(1, 2); -> see cppref
-// int array with struct or class with element access operator + what else may be needed
+// int array with struct or class with element access operator + what else may
+// be needed
 //
-
